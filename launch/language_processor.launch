@@ -1,3 +1,4 @@
 <launch>
   <node pkg="language_processor" type="language_processor_node.py" name="language_processor_node" output="screen" />
+  <arg name='kb_places_xml' default=' $(find tiago_sim_integration)/maps/012_places/places.xml'/>
 </launch>

@@ -4,6 +4,7 @@
 import rospy
 import tiago_msgs.msg
 import std_msgs.msg
+import rcprg_kb.places_xml as kb_p
 import os
 import actionlib
 from std_msgs.msg import String, Bool
@@ -44,6 +45,11 @@ def main():
             'rico_says', tiago_msgs.msg.SaySentenceAction)
 
     # conversation_state = ConversationState()
+
+    places_xml_filename = rospy.get_param('/kb_places_xml')
+    print 'Reading KB for places from file "' + places_xml_filename + '"'
+    kb_places = kb_p.PlacesXmlParser(places_xml_filename).getKB()
+    places_names = [place.encode('utf-8') for place in kb_places.getPlacesIds()]
 
     openai_interface = OpenAIInterface()
 
@@ -151,7 +157,7 @@ def main():
             conversation_history_string += "%s: %s \n" % ('Rico' if event.actor == 'Rico' else 'User', event.complement)
 
         response = openai_interface.detect_intent_with_params(
-            s_i_with_params_openai, conversation_history_string)
+            s_i_with_params_openai, conversation_history_string, places_names)
 
         print response
 

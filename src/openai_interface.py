@@ -146,7 +146,7 @@ class OpenAIInterface:
         return response
 
 
-    def detect_intent_with_params(self, intents_with_params, conv_history_string):
+    def detect_intent_with_params(self, intents_with_params, conv_history_string, places_names):
         print intents_with_params
         intents_list_string = ''.join(map(lambda (idx, dic): """
         %i. %s
@@ -155,9 +155,13 @@ class OpenAIInterface:
             ))
         ))
 
+        places_string = ', '.join(places_names)
+
+        print(places_string)
+
         messages = [{
             "role": "system",
-            "content": get_detect_intent_system_story(intents_list_string, conv_history_string)
+            "content": get_detect_intent_system_story(intents_list_string, conv_history_string, places_string)
         }]
 
         response = self.request_gpt("gpt-4-1106-preview", messages, force_json=True)
